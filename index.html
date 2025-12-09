@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Hour - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <!-- Logo y título -->
+            <div class="login-header">
+                <div class="login-logo">
+                    <img src="img/KeyLogo.png" alt="Key Logo" class="login-img">
+                </div>
+                <h1>Key Hour</h1>
+                <p class="subtitle">Sistema de Gestión de Horas</p>
+            </div>
+
+            <!-- Formulario de login -->
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Correo Institucional
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="nombre.apellido@keyinstitute.edu.sv"
+                        required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="••••••••"
+                        required>
+                </div>
+                
+                <div id="loginError" class="error-message" style="display: none;"></div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </button>
+            </form>
+
+            <!-- Credenciales de prueba -->
+            <div class="demo-credentials">
+                <h4><i class="fas fa-key"></i> Credenciales de Prueba</h4>
+                <div class="credential">
+                    <strong>Estudiante:</strong>
+                    <span>alumno1@key.edu.sv / 1234</span>
+                </div>
+                <div class="credential">
+                    <strong>Encargado:</strong>
+                    <span>encargado1@key.edu.sv / 1234</span>
+                </div>
+                <div class="credential">
+                    <strong>Administrador:</strong>
+                    <span>admin@key.edu.sv / 1234</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>© Instituto Kriete de Ingeniería y Ciencias</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIN CORRECTO DEFINITIVO -->
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorDiv = document.getElementById("loginError");
+
+            errorDiv.style.display = "none";
+
+            try {
+                const res = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = "block";
+                    return;
+                }
+
+                // ✔ Guardar sesión
+                sessionStorage.setItem("current_user", data.email);
+                sessionStorage.setItem("current_role", data.rol);
+
+                console.log("Usuario guardado:", data.email);
+                console.log("Rol guardado:", data.rol);
+
+                // ✔ Redirección desde respuesta real SQL
+                if (data.rol === "Estudiante") {
+                    window.location.href = "student.html";
+                } else if (data.rol === "Encargado") {
+                    window.location.href = "manager.html";
+                } else if (data.rol === "Administrador") {
+                    window.location.href = "admin.html";
+                } else {
+                    errorDiv.textContent = "Rol desconocido";
+                    errorDiv.style.display = "block";
+                }
+
+            } catch (err) {
+                errorDiv.textContent = "Error al conectar con el servidor";
+                errorDiv.style.display = "block";
+                console.error("ERROR LOGIN", err);
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+

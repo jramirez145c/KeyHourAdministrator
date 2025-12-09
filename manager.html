@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del Encargado - Key Hour</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/panels.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- VALIDAR ROL -->
+<script>
+    const role = sessionStorage.getItem("current_role");
+    if (!role || role !== "Encargado") {
+        window.location.replace("index.html");
+    }
+</script>
+
+<!-- MOSTRAR NOMBRE USUARIO -->
+<script>
+    const name = sessionStorage.getItem("current_user");
+    if (name) {
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("managerName").textContent = name;
+        });
+    }
+</script>
+
+    <!-- Header -->
+    <header class="panel-header">
+        <div class="header-left">
+            <i class="fas fa-user-tie header-icon"></i>
+            <h1>Panel del Encargado</h1>
+        </div>
+        <div class="header-right">
+            <span id="managerName" class="user-name"></span>
+            <button onclick="logout()" class="btn btn-secondary btn-sm">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Sección 1: Mis Proyectos Asignados -->
+        <section class="panel-section">
+            <h2><i class="fas fa-project-diagram"></i> Mis Proyectos Asignados</h2>
+            <div class="table-container">
+                <table id="proyectosAsignadosTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Cupos Ocupados</th>
+                            <th>Horas Otorgadas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sección 2: Postulaciones -->
+        <section id="postulacionesSection" class="panel-section" style="display: none;">
+            <h2><i class="fas fa-users"></i> Postulaciones del Proyecto: <span id="proyectoSeleccionadoNombre"></span></h2>
+            <div class="table-container">
+                <table id="postulacionesTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sección 3: Aprobación de Horas -->
+        <section class="panel-section">
+            <h2><i class="fas fa-clock"></i> Aprobación de Horas Registradas</h2>
+            <div class="table-container">
+                <table id="horasPendientesTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Estudiante</th>
+                            <th>Proyecto</th>
+                            <th>Fecha</th>
+                            <th>Descripción</th>
+                            <th>Horas</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Modal Rechazar -->
+    <div id="rechazarModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rechazar Postulación</h3>
+                <button onclick="closeRechazarModal()" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="razonRechazo">Razón del rechazo:</label>
+                    <textarea id="razonRechazo" rows="4" placeholder="Explica brevemente por qué se rechaza la postulación..." required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeRechazarModal()" class="btn btn-secondary">Cancelar</button>
+                <button onclick="confirmarRechazar()" class="btn btn-danger">Rechazar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/database.js"></script>
+    <script src="js/manager.js"></script>
+
+    <script>
+        function logout() {
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        }
+    </script>
+
+</body>
+</html>

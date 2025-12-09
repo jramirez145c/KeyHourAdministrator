@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del Administrador - Key Hour</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/panels.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<script>
+    const role = sessionStorage.getItem("current_role");
+    if (!role || role !== "Administrador") {
+        window.location.replace("index.html");
+    }
+</script>
+
+<script>
+    const name = sessionStorage.getItem("current_user");
+    if (name) {
+        window.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("adminName").textContent = name;
+        });
+    }
+</script>
+
+    <header class="panel-header">
+        <div class="header-left">
+            <i class="fas fa-user-shield header-icon"></i>
+            <h1>Panel del Administrador</h1>
+        </div>
+        <div class="header-right">
+            <span id="adminName" class="user-name"></span>
+            <button onclick="logout()" class="btn btn-secondary btn-sm">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <section class="panel-section">
+            <h2><i class="fas fa-plus-circle"></i> Crear Nuevo Proyecto</h2>
+            <div class="form-card">
+                <form id="crearProyectoForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombreProyecto">Nombre del Proyecto:</label>
+                            <input type="text" id="nombreProyecto" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="horasProyecto">Horas a Otorgar:</label>
+                            <input type="number" id="horasProyecto" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cuposProyecto">Cupos:</label>
+                            <input type="number" id="cuposProyecto" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="encargadoProyecto">Encargado Asignado:</label>
+                            <select id="encargadoProyecto" required>
+                                <option value="">Selecciona un encargado...</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descripcionProyecto">Descripción:</label>
+                        <textarea id="descripcionProyecto" rows="4" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Crear Proyecto
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel-section">
+            <h2><i class="fas fa-list"></i> Lista de Proyectos</h2>
+            <div class="table-container">
+                <table id="proyectosTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Encargado</th>
+                            <th>Estado</th>
+                            <th>Cupos</th>
+                            <th>Horas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel-section">
+            <h2><i class="fas fa-history"></i> Historial de Proyectos (Finalizados/Cancelados)</h2>
+            <div class="table-container">
+                <table id="historialTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Encargado</th>
+                            <th>Horas</th>
+                            <th>Cupos</th>
+                            <th>Estado</th>
+                            <th>Creado</th>
+                            <th>Participantes</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel-section">
+            <h2><i class="fas fa-chart-bar"></i> Resumen de Horas por Estudiante</h2>
+            <div class="table-container">
+                <table id="resumenHorasTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Beca (%)</th>
+                            <th>Horas Requeridas</th>
+                            <th>Horas Aprobadas (Año)</th>
+                            <th>Horas Acumuladas</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <button onclick="verificarCumplimientoAnual()" class="btn btn-primary">
+                    <i class="fas fa-check-circle"></i> Verificar Cumplimiento
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="js/database.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+        function logout() {
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        }
+    </script>
+
+</body>
+</html>

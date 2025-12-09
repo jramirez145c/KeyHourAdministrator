@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del Estudiante - Key Hour</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/panels.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- VALIDAR ROL -->
+<script>
+    const role = sessionStorage.getItem("current_role");
+    if (!role || role !== "Estudiante") {
+        window.location.replace("index.html");
+    }
+</script>
+
+<!-- MOSTRAR NOMBRE DEL ESTUDIANTE -->
+<script>
+    const name = sessionStorage.getItem("current_user");
+    if (name) {
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("studentName").textContent = name;
+        });
+    }
+</script>
+
+    <!-- Header -->
+    <header class="panel-header">
+        <div class="header-left">
+            <i class="fas fa-user-graduate header-icon"></i>
+            <h1>Panel del Estudiante</h1>
+        </div>
+        <div class="header-right">
+            <span id="studentName" class="user-name"></span>
+            <button onclick="logout()" class="btn btn-secondary btn-sm">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Sección 1: Proyectos activos -->
+        <section class="panel-section">
+            <h2><i class="fas fa-project-diagram"></i> Proyectos Activos Disponibles</h2>
+            <div class="table-container">
+                <table id="proyectosTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Encargado</th>
+                            <th>Cupos Disponibles</th>
+                            <th>Horas Otorgadas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Registrar horas -->
+        <section class="panel-section">
+            <h2><i class="fas fa-clock"></i> Registrar Horas</h2>
+            <div class="form-card">
+                <form id="registrarHorasForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="proyectoAceptado">Proyecto (solo aceptados):</label>
+                            <select id="proyectoAceptado" required></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaHoras">Fecha:</label>
+                            <input type="date" id="fechaHoras" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cantidadHoras">Cantidad de horas:</label>
+                            <input type="number" id="cantidadHoras" min="0.1" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcionHoras">Descripción:</label>
+                        <textarea id="descripcionHoras" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Registrar Horas
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Postulaciones -->
+        <section class="panel-section">
+            <h2><i class="fas fa-tasks"></i> Mis Postulaciones</h2>
+            <div class="table-container">
+                <table id="postulacionesTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Proyecto</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Razón Rechazo</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Notificaciones -->
+        <section class="panel-section">
+            <h2><i class="fas fa-bell"></i> Notificaciones</h2>
+            <div id="notificacionesList" class="notifications-container"></div>
+        </section>
+
+    </div>
+
+    <!-- Modal detalles proyecto -->
+    <div id="proyectoModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalProyectoNombre"></h3>
+                <button onclick="closeModal()" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Descripción:</strong> <span id="modalProyectoDescripcion"></span></p>
+                <p><strong>Encargado:</strong> <span id="modalProyectoEncargado"></span></p>
+                <p><strong>Cupos:</strong> <span id="modalProyectoCupos"></span></p>
+                <p><strong>Horas:</strong> <span id="modalProyectoHoras"></span></p>
+                <p><strong>Estado:</strong> <span id="modalProyectoEstado"></span></p>
+
+                <div id="estadoPostulacion" class="alert"></div>
+
+                <div id="botonesPostulacion" style="display: none;">
+                    <button onclick="postularProyecto()" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Postularme
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()" class="btn btn-secondary">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/database.js"></script>
+    <script src="js/student.js"></script>
+
+    <script>
+        function logout() {
+            sessionStorage.clear();
+            window.location.replace("index.html");
+        }
+    </script>
+
+</body>
+</html>
